@@ -61,6 +61,9 @@ jobs:
     - name: Clone source code
       run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
 
+    - name: Clone Smartinfo
+      run: cd openwrt/package && git clone https://github.com/iamaluckyguy/luci-app-smartinfo.git
+
     - name: Load custom feeds
       run: |
         [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
