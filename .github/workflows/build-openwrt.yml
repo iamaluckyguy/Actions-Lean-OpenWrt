@@ -62,7 +62,7 @@ jobs:
       run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
 
     - name: Clone Smartinfo
-      run: cd openwrt/package && git clone https://github.com/iamaluckyguy/luci-app-smartinfo.git
+      run: git clone https://github.com/iamaluckyguy/luci-app-smartinfo.git openwrt/package/luci-app-smartinfo
 
     - name: Load custom feeds
       run: |
