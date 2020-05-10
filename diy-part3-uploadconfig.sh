@@ -1,6 +1,8 @@
   
 #!/bin/sh
 
+# This is not in use any longer as the seed.config is cofigured to upload to WeTransfer and CowTransfer in the main file.
+
 #upload config to ftp after menuconfig
 
 ./scripts/diffconfig.sh > seed.config
@@ -13,8 +15,8 @@ newfilename=seed.config-newwifi3-$date
 cp seed.config $newfilename
 
 PUTFILE=$newfilename
-ftp -v -n 34.92.60.168<<EOF
-user Config ConfigUpload
+ftp -v -n 252.188.136.8<<EOF
+user FTPUser FTPPass
 passive
 put $PUTFILE
 bye
