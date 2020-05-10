@@ -16,9 +16,8 @@ PUTFILE=$newfilename
 ftp -v -n 34.92.60.168<<EOF
 user Config ConfigUpload
 passive
-prompt
 put $PUTFILE
 bye
 #here document
 EOF
-echo "commit to ftp successfully"
+echo "Commit to ftp completed"
