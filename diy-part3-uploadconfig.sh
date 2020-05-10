@@ -16,7 +16,6 @@ PUTFILE=$newfilename
 ftp -v -n 34.92.60.168<<EOF
 user Config ConfigUpload
 passive
-binary
 prompt
 put $PUTFILE
 bye
