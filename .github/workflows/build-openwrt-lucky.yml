@@ -6,7 +6,7 @@
 # Blog: https://p3terx.com
 #=================================================
 
-name: Build OpenWrt For NewWIFI3
+name: Build OpenWrt For NEWWIFI3
 
 on:
   repository_dispatch:
@@ -17,7 +17,6 @@ on:
       - master
     paths:
       - 'newwifi3.config'
-    #  - '.config'
 #  schedule:
 #    - cron: 0 8 * * 5
   watch:
@@ -27,16 +26,16 @@ env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
-  # CONFIG_FILE: .config
   CONFIG_FILE: newwifi3.config
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
-  DIY_P3_SH: diy-part3-uploadconfig.sh
   SSH_ACTIONS: true
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
-  UPLOAD_COWTRANSFER: false
-  UPLOAD_WETRANSFER: false
+  UPLOAD_CONFIG_COWTRANSFER: true
+  UPLOAD_CONFIG_WETRANSFER: true
+  UPLOAD_COWTRANSFER: true
+  UPLOAD_WETRANSFER: true
   TZ: Asia/Shanghai
 
 jobs:
@@ -66,6 +65,18 @@ jobs:
 
     - name: Clone Smartinfo
       run: git clone https://github.com/iamaluckyguy/luci-app-smartinfo.git openwrt/package/lucky/luci-app-smartinfo
+    
+    - name: Clone KoolproxyR
+      run: git clone https://github.com/jefferymvp/luci-app-koolproxyR.git openwrt/package/lucky/luci-app-koolproxyR
+#Cancel this because of dependency not solved and failed
+#    - name: Clone PassWall
+#      run: git clone https://github.com/xnxy2012/luci-app-passwall.git openwrt/package/lucky/luci-app-passwall
+    
+    - name: Clone OpenClash
+      run: git clone https://github.com/vernesong/OpenClash.git openwrt/package/lucky/OpenClash
+    
+    - name: Clone OpenAppFilter
+      run: git clone https://github.com/destan19/OpenAppFilter.git openwrt/package/lucky/OpenAppFilter
 
     - name: Load custom feeds
       run: |
@@ -91,13 +102,28 @@ jobs:
     - name: SSH connection to Actions
       uses: P3TERX/debugger-action@master
       if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh')
-
-    - name: Upload config to FTP
+    
+    - name: Copy .config as seed.config
       run: |
-        chmod +x $DIY_P3_SH
         cd openwrt
-        ../$DIY_P3_SH
+        ./scripts/diffconfig.sh > seed.config
+        
+    - name: Upload Config File to cowtransfer
+      if: env.UPLOAD_CONFIG_COWTRANSFER == 'true' && !cancelled()
+      run: |
+        cd openwrt
+        curl -fsSL git.io/file-transfer | sh
+        ./transfer cow --block 2621440 -s -p 99 -t 3 --hash --no-progress seed.config 2>&1 | tee cowtransfer.log
+        echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https)"
 
+    - name: Upload Config to WeTransfer
+      if: env.UPLOAD_CONFIG_WETRANSFER == 'true' && !cancelled()
+      run: |
+        cd openwrt
+        curl -fsSL git.io/file-transfer | sh
+        ./transfer wet -s -p 16 --no-progress seed.config 2>&1 | tee wetransfer.log
+        echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
+        
     - name: Download package
       id: package
       run: |
