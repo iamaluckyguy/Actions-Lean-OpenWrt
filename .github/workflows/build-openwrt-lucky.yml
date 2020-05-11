@@ -75,8 +75,8 @@ jobs:
     - name: Clone OpenClash
       run: git clone https://github.com/vernesong/OpenClash.git openwrt/package/lucky/OpenClash
     
-    - name: Clone OpenAppFilter
-      run: git clone https://github.com/destan19/OpenAppFilter.git openwrt/package/lucky/OpenAppFilter
+#    - name: Clone OpenAppFilter
+#      run: git clone https://github.com/destan19/OpenAppFilter.git openwrt/package/lucky/OpenAppFilter
 
     - name: Load custom feeds
       run: |
