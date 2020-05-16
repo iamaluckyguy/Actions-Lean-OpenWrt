@@ -29,7 +29,7 @@ env:
   DIY_P2_SH: diy-part2.sh
   FREE_UP_DISK: false
   SSH_ACTIONS: true
-  UPLOAD_BIN_DIR: false
+  UPLOAD_BIN_DIR: true
   UPLOAD_FIRMWARE: true
   UPLOAD_CONFIG_COWTRANSFER: true
   UPLOAD_CONFIG_WETRANSFER: true
